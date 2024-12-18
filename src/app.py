@@ -25,22 +25,34 @@ with col1:
     if st.button("Submit"):
         if user_input:
             with st.container(border=True):
-                # Get model name from router
                 try:
                     LLM_router = LLMRouter(model_details.get_available_models())
                     model_name = LLM_router.classify_prompt(user_input)[0]
-                    output = grokCaller.get_completion(user_input, model=model_name)
                 except:
-                    #Default behavior if model can't be called
-                    output = ("I can't respond right now",50)
                     model_name = "mixtral-8x7b-32768"
 
-                # Display model info in small text
-                st.caption(f"Using {model_name}")
-                
-                # Create message container with avatar and styling
-                with st.chat_message("assistant", avatar="🤖"):
-                    st.write(output[0])
+                # Get responses from all available models
+                outputs = {}
+                for model in model_details.get_available_models().keys():
+                    try:
+                        outputs[model] = grokCaller.get_completion(user_input, model=model)
+                    except:
+                        outputs[model] = ("I can't respond right now", 50)
+
+                # Display chosen model's response first
+                with st.container(border=True):
+                    # Header with model name and chosen status
+                    header_cols = st.columns([3, 1])
+                    with header_cols[0]:
+                        st.markdown(f"### 🌟 {model_name} <div style='display: inline-block; background-color: #90EE9033; padding: 1px 10px; border-radius: 5px; margin-left: 10px;'><p style='color: #2E8B57; font-weight: bold; margin: 0;'>Selected by Router</p></div>", unsafe_allow_html=True)
+                    # Message container
+                    st.write(outputs[model_name][0])
+
+                # Display other models' responses
+                for model, output in outputs.items():
+                    if model != model_name:
+                        with st.expander(f"# {model}"):
+                            st.write(output[0])
 
                 # Analytics
                 analytics.display_model_impact(model_name, output[1])
