@@ -10,7 +10,9 @@ st.title("LLM Router Prototype")
 
 
 # Initialize GroqModelCaller
+print("Initializing GroqModelCaller...")
 grokCaller = GroqModelCaller()
+print("GroqModelCaller initialized successfully")
 
 # Text input
 user_input = st.text_area("Enter your text:", height=120)
