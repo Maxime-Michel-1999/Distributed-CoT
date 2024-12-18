@@ -14,12 +14,10 @@ Example Task:
 "Write a short story about a dragon who learns to play the piano."
 
 Your Response:
-Classification: Not Complicated
-Reasoning: Writing a short story is straightforward, as it requires imagination and basic narrative skills, but does not involve complex or specialized knowledge.
+Not Complicated
 
 Task to Classify:
 "{user_prompt}"
 
-Your Response:
-Classification:
+Your Response should only be "Complicated" or "Not Complicated" and nothing else.
 """

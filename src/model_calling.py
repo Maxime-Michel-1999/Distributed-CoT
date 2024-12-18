@@ -5,7 +5,7 @@ from dotenv import load_dotenv  # Ajouter cet import
 
 
 class GroqModelCaller:
-    def __init__(self, api_key: Optional[str] = None, model: str = "mixtral-8x7b-32768"):
+    def __init__(self, api_key: Optional[str] = None):
         """
         Initialize the Groq client with an API key.
         
@@ -20,10 +20,10 @@ class GroqModelCaller:
         if not self.api_key:
             raise ValueError("A Groq API key is required in the .env file")
         self.client = Groq(api_key=self.api_key)
-        self.model = model
 
     def get_completion(self, 
                       prompt: str,
+                      model: str = "mixtral-8x7b-32768",
                       temperature: float = 0.7,
                       max_tokens: int = 1000) -> tuple[str, int]:
         """
@@ -42,7 +42,7 @@ class GroqModelCaller:
         try:
             completion = self.client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
-                model=self.model,
+                model=model,
                 temperature=temperature,
                 max_tokens=max_tokens
             )
