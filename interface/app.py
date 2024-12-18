@@ -1,5 +1,5 @@
 import streamlit as st
-from router import router
+from routing.router import router
 from model_calling.model_calling import GroqModelCaller
 
 # Configure page layout to remove default margins
