@@ -1,6 +1,6 @@
 import streamlit as st
-from routing.router import LLMRouter
-from model_calling.model_calling import GroqModelCaller
+from ..model_calling.model_calling import GroqModelCaller
+from ..routing.router import LLMRouter
 
 # Configure page layout to remove default margins
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
