@@ -52,3 +52,35 @@ def get_model_token_cost(model_name: str) -> float:
         raise ValueError(f"Unknown model: {model_name}")
         
     return model_costs_europe[model_name]
+
+def get_model_token_cost(model_name: str) -> float:
+    """
+    Returns the token cost for a given model.
+    """
+
+    # Dictionary mapping model names to their token costs in terms of energy, emissions and primary energy
+    model_costs_europe = {
+        "llama3-70b-8192": {
+            "energy_wh": 0.0125,        # Energy in Watt-hours
+            "ghg_co2eq": 0.00665,       # Greenhouse gas emissions in gCO2eq
+            "primary_energy_kj": 0.165,
+            "token_cost": 0.59e-6
+        },
+        "llama3-8b-8192": {
+            "energy_wh": 0.00377,
+            "ghg_co2eq": 0.00202,
+            "primary_energy_kj": 0.0498,
+            "token_cost": 0.05e-6
+        },
+        "mixtral-8x7b-32768": {
+            "energy_wh": 0.00446,
+            "ghg_co2eq": 0.00238,
+            "primary_energy_kj": 0.0587,
+            "token_cost": 0.24e-6
+        }
+    }
+    
+    if model_name not in model_costs_europe:
+        raise ValueError(f"Unknown model: {model_name}")
+        
+    return model_costs_europe[model_name]
