@@ -1,3 +1,6 @@
+import model_details
+import streamlit as st
+
 def display_model_impact(model_name: str, num_tokens: int):
     """
     Affiche dans Streamlit l'impact environnemental et le coût pour un nombre donné de tokens.

@@ -23,10 +23,16 @@ if st.button("Submit"):
 
         with st.container(border=True):
             # Get model name from router
-            LLM_router = LLMRouter(model_details.get_available_models())
-            model_name = LLM_router.classify_prompt(user_input)[0]
-            st.write(f"Model {model_name} will be used")   # Call model with prompt
-            output = grokCaller.get_completion(user_input, model = model_name)
+            try:
+                LLM_router = LLMRouter(model_details.get_available_models())
+                model_name = LLM_router.classify_prompt(user_input)[0]
+                st.write(f"Model {model_name} will be used")   # Call model with prompt
+                output = grokCaller.get_completion(user_input, model = model_name)
+            except:
+                #Default behavior if model can't be called
+                output = ("I can't respond right now",50)
+                model_name = "mixtral-8x7b-32768"
+
             st.write("Output:", output[0])
 
             # Analytics
