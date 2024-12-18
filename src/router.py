@@ -28,7 +28,7 @@ class LLMRouter:
         api_key = os.getenv("GROQ_API_KEY")
         model = model_calling.GroqModelCaller(api_key=api_key, model="llama3-8b-8192")
         classification_prompt = classification_instructions.prompt.format(user_prompt=user_prompt)
-        output = model.get_completion(classification_prompt)
+        output = model.get_completion(classification_prompt)[0]
         
         sorted_models = sorted(self.models_complexity.items(), key=lambda item: item[1])
         
