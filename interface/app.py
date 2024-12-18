@@ -1,5 +1,5 @@
 import streamlit as st
-from routing.router import router
+from routing.router import LLMRouter
 from model_calling.model_calling import GroqModelCaller
 
 # Configure page layout to remove default margins
@@ -19,7 +19,7 @@ user_input = st.text_area("Enter your text:", height=120)
 if st.button("Submit"):
     if user_input:
         # Get model name from router
-        model_name = router(user_input)
+        model_name = LLMRouter(user_input)
         st.write(f"Model {model_name} will be used")
         
         # Call model with prompt
