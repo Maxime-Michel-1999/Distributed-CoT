@@ -1,5 +1,5 @@
 from typing import Any
-from model_calling import model_calling, available_models
+from model_calling import model_calling, model_details
 import classification_instructions
 import os
 
@@ -48,3 +48,4 @@ if __name__ == "__main__":
     
     model = router.classify_prompt(prompt)
     print(model)
+
