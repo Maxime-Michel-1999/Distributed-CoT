@@ -31,17 +31,20 @@ def get_model_token_cost(model_name: str) -> float:
         "llama3-70b-8192": {
             "energy_wh": 0.0125,        # Energy in Watt-hours
             "ghg_co2eq": 0.00665,       # Greenhouse gas emissions in gCO2eq
-            "primary_energy_kj": 0.165   # Primary energy in kJ
+            "primary_energy_kj": 0.165,
+            "token_cost": 0.59e-6   # Primary energy in kJ
         },
         "llama3-8b-8192": {
             "energy_wh": 0.00377,
             "ghg_co2eq": 0.00202,
-            "primary_energy_kj": 0.0498
+            "primary_energy_kj": 0.0498,
+            "token_cost": 0.05e-6
         },
         "mixtral-8x7b-32768": {
             "energy_wh": 0.00446,
             "ghg_co2eq": 0.00238,
-            "primary_energy_kj": 0.0587
+            "primary_energy_kj": 0.0587,
+            "token_cost": 0.24e-6
         }
     }
     
