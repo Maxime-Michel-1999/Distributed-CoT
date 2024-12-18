@@ -54,6 +54,6 @@ with col2:
     for model, complexity in available_models.items():
         with st.container(border=True):
             st.write(f"🟢 **{model}**")
-            st.caption(f"Complexity: {complexity}")
+            st.caption(f"Parameters: {complexity}B")
             model_costs = model_details.get_model_token_cost(model)
-            st.caption(f"Cost per token: ${model_costs['token_cost']:.2e}")
+            st.caption(f"Cost per million tokens: ${model_costs['token_cost']*1e6:.2f}")
