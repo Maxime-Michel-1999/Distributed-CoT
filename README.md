@@ -66,3 +66,8 @@ This repository contains a **Streamlit app** that leverages **Groq**  to route p
 
     The app displays the chosen model, its cost, and estimated energy consumption.
     You can compare different routing options to understand the trade-offs.
+
+
+### Ressources
+
+You can find more details about the LLM-Router project in the [LLM-Router GitHub Repository](https://github.com/anyscale/llm-router?tab=readme-ov-file%E2%81%A9&fbclid=IwZXh0bgNhZW0CMTEAAR2J40ip2sr_dyRvoFOZlXlbggQvzGAzSvwgCeXfmEOJusCy9WAuuWZGrlY_aem_einNoewxqFbkunzmUGku4Q).  
