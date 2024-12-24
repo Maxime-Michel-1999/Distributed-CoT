@@ -1,8 +1,9 @@
+import os
 from typing import Any
+
 import model_calling
 import model_details
-import classification_instructions
-import os
+from prompt_manager import PromptManager
 
 
 class LLMRouter:
@@ -26,12 +27,20 @@ class LLMRouter:
             str: 'Complicated' or 'Not Complicated' based on the model's output.
         """
         api_key = os.getenv("GROQ_API_KEY")
+
+        prompt_manager = PromptManager(template_dir="templates")
         model = model_calling.GroqModelCaller(api_key=api_key)
-        classification_prompt = classification_instructions.prompt.format(user_prompt=user_prompt)
-        output = model.get_completion(classification_prompt, model="llama3-8b-8192")[0]
-        
-        sorted_models = sorted(self.models_complexity.items(), key=lambda item: item[1])
-        
+        classification_prompt = prompt_manager.render_template(
+            "classification_instructions.j2", {"user_prompt": user_prompt}
+        )
+        output = model.get_completion(
+            classification_prompt, model="llama3-8b-8192"
+        )[0]
+
+        sorted_models = sorted(
+            self.models_complexity.items(), key=lambda item: item[1]
+        )
+
         if output == "Complicated":
             return sorted_models[-1]
         else:
@@ -39,14 +48,13 @@ class LLMRouter:
 
 
 if __name__ == "__main__":
-    # Create a GroqModelCaller instance
+
     print(os.getcwd())
     router = LLMRouter(model_details.get_available_models())
-    
+
     # Test with a simple prompt
     prompt = "Say hello in English"
     print("Sending prompt:", prompt)
-    
+
     model = router.classify_prompt(prompt)
     print(model)
-

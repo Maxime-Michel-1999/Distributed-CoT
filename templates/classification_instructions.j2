@@ -1,4 +1,3 @@
-prompt = """
 Task:
 You are an expert at identifying whether a request is simple or complicated based on its complexity, specificity, and requirements for specialized knowledge.
 
@@ -12,12 +11,11 @@ Otherwise, classify it as not complicated. Provide your classification along wit
 
 Example Task:
 "Write a short story about a dragon who learns to play the piano."
-
 Your Response:
 Not Complicated
 
-Task to Classify:
-"{user_prompt}"
 
-Your Response should only be "Complicated" or "Not Complicated" and nothing else.
-"""
+Task to Classify:
+{{user_prompt}}
+
+Your Response should only be "Complicated" or "Not Complicated" and nothing else or you will be penalized.
