@@ -1,5 +1,14 @@
 {
-    "mixtral-8x7b-32768": 12.9,
-    "llama3-8b-8192": 8,
-    "llama3-70b-8192": 70
+    "mixtral-8x7b-32768": {
+        "parameters": 12.9,
+        "context_size": 32768
+    },
+    "llama3-8b-8192": {
+        "parameters": 8,
+        "context_size": 8192
+    },
+    "llama3-70b-8192": {
+        "parameters": 70,
+        "context_size": 8192
+    }
 }
