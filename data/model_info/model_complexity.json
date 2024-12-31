@@ -10,5 +10,9 @@
     "llama3-70b-8192": {
         "parameters": 70,
         "context_size": 8192
+    },
+    "gpt-4": {
+        "parameters": 1750,
+        "context_size": 8192
     }
 }

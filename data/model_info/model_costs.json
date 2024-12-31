@@ -16,5 +16,11 @@
         "ghg_co2eq": 0.00238,
         "primary_energy_kj": 0.0587,
         "token_cost": 0.24e-6
+    },
+    "gpt-4": {
+        "energy_wh": 0.0185,
+        "ghg_co2eq": 0.00985,
+        "primary_energy_kj": 0.244,
+        "token_cost": 3.0e-6
     }
 }

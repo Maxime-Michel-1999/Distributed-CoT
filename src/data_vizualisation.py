@@ -1,7 +1,6 @@
 import pandas as pd
 import plotly.express as px
 
-
 def model_comparison_plot(data, variable="energy_wh"):
     df = pd.DataFrame(data)
 
@@ -27,3 +26,4 @@ def model_comparison_plot(data, variable="energy_wh"):
     )
 
     return fig
+

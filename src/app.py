@@ -1,6 +1,7 @@
 import streamlit as st
 
 import analytics
+from chain_of_thoughts import chain_of_thoughts_orchestrator
 import model_details
 from model_calling import GroqModelCaller
 from router import LLMRouter
@@ -51,7 +52,7 @@ with st.sidebar:
 groqCaller = GroqModelCaller()
 
 # Text input section
-st.write("## 🌟 Prompt Input")
+##st.write("## 🌟 Prompt Input")
 
 # Option for RAG above prompt input
 enable_rag = st.checkbox("🔍 Enable RAG (Retrieval-Augmented Generation)")
@@ -70,15 +71,16 @@ if enable_rag:
 else:
     context_text = ""
 
-user_input = st.text_area("Enter your text here:", height=100)
+# Option for Chain of Thoughts
+enable_cot = st.checkbox("🧠 Enable Chain of Thoughts")
+if enable_cot:
+    enable_rag = False
 
-# Display prompt length
-if user_input:
-    st.info(f"Prompt length: {len(user_input.split())} words")
+user_input = st.text_area("Enter your prompt here:", height=100)
 
 # Submit button
 if st.button("🔍 Analyze and Route"):
-    if user_input:
+    if user_input and not enable_cot:
         with st.container():
             try:
                 # Combine user input with context if RAG is enabled
@@ -105,19 +107,46 @@ if st.button("🔍 Analyze and Route"):
                         0,
                     )
 
+            
             # Display router-selected model's response
-            with st.container():
-                st.write(f"### 🏆 Selected Model: {model_name}")
-                st.write(outputs[model_name][0])
+            st.write(f"### 🏆 {model_name}")
+            col_display_response, _, col_display_analytics = st.columns((20,1,16))
+            with col_display_response:
+                st.markdown(
+                    f"""
+                    <div style='padding: 1rem; border: 1px solid #90EE90; border-radius: 0.5rem; background-color: rgba(144, 238, 144, 0.1);'>
+                    {outputs[model_name][0]}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                st.write ("")
+                with st.expander("🔎 Responses from other models", expanded=False):
+                    # Display responses from other models
+                    for model, output in outputs.items():
+                        if model != model_name:
+                            st.markdown(
+                                f"""
+                                #### Response from {model}
+                                <div style='padding: 1rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background-color: rgba(224, 224, 224, 0.1);'>
+                                {output[0]}
+                                </div>
+                                """,
+                                unsafe_allow_html=True
+                            )
+                            st.write("")
+            
+            with col_display_analytics:
+                with st.container(border=True):
+                    analytics.display_concise_comparison_analytics(model_name, outputs[model_name][1])
+                    st.write("**Performance Gain vs ChatGPT (Router Impact)**")
+                    analytics.display_gain(model_name, outputs[model_name][1])
 
-            # Display responses from other models
-            for model, output in outputs.items():
-                if model != model_name:
-                    with st.expander(f"🔎 Response from {model}"):
-                        st.write(output[0])
 
             # Display analytics for the selected model
             analytics.display_model_impact(model_name, outputs[model_name][1])
 
+    elif enable_cot:
+        chain_of_thoughts_orchestrator(user_input)
     else:
         st.warning("Please enter a prompt to analyze.")

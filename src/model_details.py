@@ -16,7 +16,8 @@ def get_available_models(
         {
             "mixtral-8x7b-32768": 12.9,  # 12.9B parameter model
             "llama3-8b-8192": 8,         # 8B parameter model
-            "llama3-70b-8192": 70        # 70B parameter model
+            "llama3-70b-8192": 70,       # 70B parameter model
+            "gpt-4": 1750                # 1.75T parameter model
         }
     """
     with open(json_file_path, "r") as file:

@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-
+import plotly.graph_objects as go
 import model_details
 from data_vizualisation import model_comparison_plot
 
@@ -122,3 +122,98 @@ def display_model_impact(model_name: str, num_tokens: int) -> None:
          ##### **${total_cost:.6f}**
         """
         )
+
+def display_concise_comparison_analytics(model_name, num_tokens):
+    # Create subplots for each metric
+    fig = go.Figure()
+    
+    metrics = ['Cost', 'Energy', 'Emissions']
+    models = list(model_details.get_available_models().keys())
+    
+    # Generate distinct colors for each model
+    model_colors = {
+        model: '#90EE90' if model == model_name else f'rgba({hash(model) % 255}, {(hash(model) >> 8) % 255}, {(hash(model) >> 16) % 255}, 0.7)'
+        for model in models
+    }
+    # Collect data for each metric
+    metric_data = {metric: [] for metric in metrics}
+    
+    # Add selected model first
+    costs = model_details.get_model_token_cost(model_name)
+    metric_data['Cost'].append(costs['token_cost'] * num_tokens * 10000)
+    metric_data['Energy'].append(costs['energy_wh'] * num_tokens)
+    metric_data['Emissions'].append(costs['ghg_co2eq'] * num_tokens)
+    
+    # Add remaining models
+    for model in [m for m in models if m != model_name]:
+        costs = model_details.get_model_token_cost(model)
+        metric_data['Cost'].append(costs['token_cost'] * num_tokens * 10000)
+        metric_data['Energy'].append(costs['energy_wh'] * num_tokens)
+        metric_data['Emissions'].append(costs['ghg_co2eq'] * num_tokens)
+
+    # Create a subplot for each metric
+    for i, metric in enumerate(metrics):
+        for j, model in enumerate(models):
+            opacity = 1.0 if model == model_name else 0.7
+            fig.add_trace(go.Bar(
+                name=model if i == 0 else None,  # Only add to legend once
+                x=[i],  # Use numeric index for x-axis positioning
+                y=[metric_data[metric][j]],
+                marker_color=model_colors[model].replace('0.7', str(opacity)),
+                marker_line_width=2 if model == model_name else 0,
+                marker_line_color='rgb(0, 0, 0)',
+                showlegend=i == 0,
+                legendgroup=model,
+            ))
+
+    # Update layout
+    fig.update_layout(
+        height=150,
+        barmode='group',
+        showlegend=True,
+        legend_title='Models',
+        xaxis={
+            'tickmode': 'array',
+            'ticktext': metrics,
+            'tickvals': [0, 1, 2],
+            'range': [-0.8, 2.8],  # Modified range to give more space on both sides
+            'tickangle': 0,
+            'fixedrange': True,    # Prevents x-axis zooming
+        },
+        yaxis={'showticklabels': False},
+        bargap=0.15,
+        bargroupgap=0.1,
+        margin=dict(l=20, r=20, t=0, b=0.1)  # Added left and right margins
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+def display_gain(model_name, num_tokens):
+    model_costs = model_details.get_model_token_cost(model_name)
+    gpt4_costs = model_details.get_model_token_cost("gpt-4")
+    
+    total_cost = model_costs["token_cost"] * num_tokens
+    total_emissions = model_costs["ghg_co2eq"] * num_tokens 
+    total_energy = model_costs["energy_wh"] * num_tokens
+    
+    gpt4_cost = gpt4_costs["token_cost"] * num_tokens
+    gpt4_emissions = gpt4_costs["ghg_co2eq"] * num_tokens
+    gpt4_energy = gpt4_costs["energy_wh"] * num_tokens
+    
+    cost_gain = ((gpt4_cost - total_cost) / gpt4_cost) * 100
+    emissions_gain = ((gpt4_emissions - total_emissions) / gpt4_emissions) * 100
+    energy_gain = ((gpt4_energy - total_energy) / gpt4_energy) * 100
+    # Create columns for better visual organization
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric("💰 Cost", f"{cost_gain:.1f}%", delta="saved")
+    
+    with col2:
+        st.metric("🌱 Emissions", f"{emissions_gain:.1f}%", delta="reduced") 
+    
+    with col3:
+        st.metric("⚡ Energy", f"{energy_gain:.1f}%", delta="saved")
